@@ -94,11 +94,6 @@ h1 {
     border-left: 4px solid #667eea;
 }
 
-.requirement-item.satisfied {
-    border-left-color: #4caf50;
-    background: #e8f5e9;
-}
-
 .requirement-icon {
     margin-right: 10px;
     font-size: 1.3em;
@@ -305,4 +300,25 @@ h1 {
     .budget-info {
         flex-direction: column;
     }
+}
+
+.header-controls {
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+.btn-home {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-home:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 20px rgba(102,126,234,0.4);
+}
+
+.modal-content button + button {
+    margin-left: 10px;
 }

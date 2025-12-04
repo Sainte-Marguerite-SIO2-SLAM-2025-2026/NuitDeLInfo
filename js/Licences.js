@@ -88,10 +88,9 @@ function initializeGameData(data) {
     init();
 }
 
-// Charger les données depuis le fichier JSON ou utiliser les données inline
+// Charger les données depuis le fichier JSON
 async function loadGameData() {
     try {
-        // Tenter de charger depuis le JSON
         const response = await fetch('../data/licences.json');
 
         if (!response.ok) {
@@ -102,11 +101,8 @@ async function loadGameData() {
         initializeGameData(data);
         console.log('✅ Données chargées depuis licences.json');
     } catch (error) {
-        console.warn('⚠️ Impossible de charger licences.json, utilisation des données intégrées');
-        console.error('❌ Erreur détaillée:', error);
-
-        // Utiliser les données inline
-        initializeGameData(INLINE_DATA);
+        console.error('❌ Erreur lors du chargement des données:', error);
+        alert('Erreur lors du chargement du jeu. Vérifiez que le fichier licences.json existe dans le dossier data/');
     }
 }
 
@@ -228,9 +224,43 @@ function updateRequirements() {
         const license = gameData.licenses.find(l => l.id === id);
         license.features.forEach(feature => coveredFeatures.add(feature));
     });
+
+    gameData.selectedRequirements.forEach(req => {
+        const reqElement = document.getElementById(`req-${req.id}`);
+        if (reqElement) {
+            if (coveredFeatures.has(req.id)) {
+                reqElement.classList.add('satisfied');
+            } else {
+                reqElement.classList.remove('satisfied');
+            }
+        }
+    });
 }
 
-function validateSelection() {
+// Valider le jeu en session PHP (sans JSON)
+async function markGameAsCompleted() {
+    try {
+        const formData = new URLSearchParams();
+        formData.append('validate_game', 'licences');
+
+        const response = await fetch('Licences.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: formData
+        });
+
+        const result = await response.text();
+        console.log('Validation:', result);
+        return result === 'success';
+    } catch (error) {
+        console.error('Erreur lors de la validation:', error);
+        return false;
+    }
+}
+
+async function validateSelection() {
     const spent = gameData.selectedLicenses.reduce((total, id) => {
         const license = gameData.licenses.find(l => l.id === id);
         return total + license.price;
@@ -248,8 +278,6 @@ function validateSelection() {
 
     const modal = document.getElementById('result-modal');
     const modalContent = document.getElementById('modal-content');
-    const modalTitle = document.getElementById('modal-title');
-    const modalMessage = document.getElementById('modal-message');
 
     modalContent.innerHTML = '';
 
@@ -258,11 +286,6 @@ function validateSelection() {
 
     const message = document.createElement('p');
     message.id = 'modal-message';
-
-    const closeBtn = document.createElement('button');
-    closeBtn.className = 'btn btn-validate close-modal';
-    closeBtn.textContent = 'Fermer';
-    closeBtn.onclick = closeModal;
 
     if (spent > gameData.budget) {
         modalContent.className = 'modal-content error';
@@ -276,6 +299,15 @@ function validateSelection() {
         message.appendChild(document.createTextNode('.'));
         message.appendChild(document.createElement('br'));
         message.appendChild(document.createTextNode('Essayez de réduire vos dépenses.'));
+
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'btn btn-validate close-modal';
+        closeBtn.textContent = 'Fermer';
+        closeBtn.onclick = closeModal;
+
+        modalContent.appendChild(title);
+        modalContent.appendChild(message);
+        modalContent.appendChild(closeBtn);
     } else if (!allRequirementsMet) {
         modalContent.className = 'modal-content error';
         title.textContent = '⚠️ Exigences Non Satisfaites !';
@@ -291,7 +323,19 @@ function validateSelection() {
         message.textContent = 'Il manque les exigences suivantes :';
         message.appendChild(document.createElement('br'));
         message.appendChild(missing);
+
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'btn btn-validate close-modal';
+        closeBtn.textContent = 'Fermer';
+        closeBtn.onclick = closeModal;
+
+        modalContent.appendChild(title);
+        modalContent.appendChild(message);
+        modalContent.appendChild(closeBtn);
     } else {
+        // Valider le jeu dans la session
+        await markGameAsCompleted();
+
         modalContent.className = 'modal-content success';
         title.textContent = '🎉 Félicitations !';
 
@@ -310,11 +354,26 @@ function validateSelection() {
         message.appendChild(document.createElement('br'));
         message.appendChild(document.createTextNode('Économie réalisée : '));
         message.appendChild(savedStrong);
-    }
 
-    modalContent.appendChild(title);
-    modalContent.appendChild(message);
-    modalContent.appendChild(closeBtn);
+        // Bouton retour à l'accueil
+        const homeBtn = document.createElement('button');
+        homeBtn.className = 'btn btn-validate';
+        homeBtn.textContent = '🏠 Retour à l\'accueil';
+        homeBtn.onclick = () => window.location.href = '../index.php';
+
+        const newGameBtn = document.createElement('button');
+        newGameBtn.className = 'btn btn-new';
+        newGameBtn.textContent = '🎲 Rejouer';
+        newGameBtn.onclick = () => {
+            closeModal();
+            newGame();
+        };
+
+        modalContent.appendChild(title);
+        modalContent.appendChild(message);
+        modalContent.appendChild(homeBtn);
+        modalContent.appendChild(newGameBtn);
+    }
 
     modal.classList.add('active');
 }
