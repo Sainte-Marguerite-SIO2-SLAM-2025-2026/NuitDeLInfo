@@ -1,0 +1,219 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 1200px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+h1 {
+    text-align: center;
+    color: #667eea;
+    margin-bottom: 10px;
+    font-size: 2em;
+}
+
+.instructions {
+    text-align: center;
+    color: #666;
+    margin-bottom: 30px;
+    font-size: 0.95em;
+}
+
+.score {
+    text-align: center;
+    font-size: 1.2em;
+    margin-bottom: 20px;
+    color: #333;
+    font-weight: bold;
+}
+
+.game-area {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.column-title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.1em;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.proprietary-title {
+    background: #ff6b6b;
+    color: white;
+}
+
+.opensource-title {
+    background: #51cf66;
+    color: white;
+}
+
+.software-item {
+    padding: 15px 20px;
+    background: #f8f9fa;
+    border: 3px solid transparent;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    position: relative;
+}
+
+.software-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.proprietary {
+    border-left: 5px solid #ff6b6b;
+}
+
+.opensource {
+    border-left: 5px solid #51cf66;
+}
+
+.software-item.selected {
+    border-color: #667eea;
+    background: #e3e8ff;
+    transform: scale(1.05);
+}
+
+.software-item.matched {
+    background: #d3f9d8;
+    border-color: #51cf66;
+    cursor: default;
+    opacity: 0.7;
+}
+
+.software-item.wrong {
+    background: #ffe0e0;
+    border-color: #ff6b6b;
+    animation: shake 0.5s;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+}
+
+.buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+button {
+    padding: 15px 40px;
+    font-size: 1.1em;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.validate-btn {
+    background: #667eea;
+    color: white;
+}
+
+.validate-btn:hover {
+    background: #5568d3;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.validate-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.reset-btn {
+    background: #ff6b6b;
+    color: white;
+}
+
+.reset-btn:hover {
+    background: #fa5252;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+}
+
+.result {
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+    display: none;
+}
+
+.result.success {
+    background: #d3f9d8;
+    color: #2b8a3e;
+    display: block;
+}
+
+.result.partial {
+    background: #fff3bf;
+    color: #e67700;
+    display: block;
+}
+
+.result.fail {
+    background: #ffe0e0;
+    color: #c92a2a;
+    display: block;
+}
+
+.match-line {
+    stroke: #667eea;
+    stroke-width: 3;
+    fill: none;
+    pointer-events: none;
+}
+
+svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
