@@ -15,11 +15,10 @@ session_start();
 if(!isset($_SESSION['jeuxValides']))
 {
     $_SESSION['jeuxValides'] = [
-        'licences' => false,
-        'abonnement' => false,
-        'matériel' => false,
-        'stockage' => false,
-        'sysExp' => false
+            'licences' => false,
+            'abonnement' => false,
+            'sysExp' => false,
+            'stockage' => false
     ];
 }
 
@@ -35,11 +34,10 @@ if(isset($_GET['validated'])) {
 
     // Mapping des composants aux clés de session
     $componentMapping = [
-        'cpu' => 'matériel',
-        'ram' => 'matériel',
-        'gpu' => 'matériel',
-        'ssd' => 'stockage',
-        'psu' => 'matériel'
+            'motherboard' => 'sysExp',
+            'ram' => 'licences',
+            'gpu' => 'abonnement',
+            'cooling' => 'stockage'
     ];
 
     if(isset($componentMapping[$component])) {
@@ -51,28 +49,25 @@ if(isset($_GET['validated'])) {
     exit();
 }
 
+// Gérer l'enregistrement du nom du jeu
+if(isset($_POST['setGameName'])) {
+    $gameName = $_POST['gameName'];
+    $_SESSION['jeuxSelectionne'] = $gameName;
+    echo json_encode(['success' => true, 'gameName' => $gameName]);
+    exit();
+}
+
 // Gérer la sélection d'un composant via AJAX
 if(isset($_POST['selectComponent'])) {
     $component = $_POST['component'];
     $_SESSION['composantSelectionne'] = $component;
 
-    // Définir la page de destination
-    $pages = [
-        'cpu' => 'cpu.php',
-        'ram' => 'ram.php',
-        'gpu' => 'gpu.php',
-        'ssd' => 'abonnement.php',
-        'psu' => 'psu.php'
-    ];
-
-    if(isset($pages[$component])) {
-        $_SESSION['jeuSelectionne'] = $pages[$component];
-        if(!in_array($component, $_SESSION['composantsPlaces'])) {
-            $_SESSION['composantsPlaces'][] = $component;
-        }
-        echo json_encode(['success' => true, 'page' => $pages[$component]]);
-        exit();
+    if(!in_array($component, $_SESSION['composantsPlaces'])) {
+        $_SESSION['composantsPlaces'][] = $component;
     }
+
+    echo json_encode(['success' => true, 'page' => 'video.php']);
+    exit();
 }
 
 // Fermer le modal de bienvenue
@@ -84,6 +79,7 @@ if(isset($_POST['closeWelcome'])) {
 
 $welcomeClosed = isset($_SESSION['welcomeClosed']) ? $_SESSION['welcomeClosed'] : false;
 $composantsPlacesJson = json_encode($_SESSION['composantsPlaces']);
+$jeuxValidesJson = json_encode($_SESSION['jeuxValides']);
 ?>
 
 <div class="container">
@@ -98,25 +94,21 @@ $composantsPlacesJson = json_encode($_SESSION['composantsPlaces']);
                 <rect x="50" y="50" width="300" height="400" rx="10" fill="#2c3e50" stroke="#34495e" stroke-width="3"/>
                 <rect x="60" y="60" width="280" height="380" rx="8" fill="#34495e"/>
 
-                <!-- Zone CPU -->
-                <rect class="drop-zone" id="cpu-zone" data-component="cpu" x="120" y="100" width="160" height="80" rx="5" fill="#3498db" opacity="0.3" stroke="#2980b9" stroke-width="2"/>
-                <text x="200" y="145" text-anchor="middle" fill="white" font-size="14" font-weight="bold">CPU</text>
+                <!-- Zone Carte Mère -->
+                <rect class="drop-zone" id="motherboard-zone" data-component="motherboard" x="90" y="90" width="220" height="100" rx="5" fill="#1abc9c" opacity="0.3" stroke="#16a085" stroke-width="2"/>
+                <text x="200" y="145" text-anchor="middle" fill="white" font-size="14" font-weight="bold">CARTE MÈRE</text>
 
                 <!-- Zone RAM -->
-                <rect class="drop-zone" id="ram-zone" data-component="ram" x="120" y="200" width="160" height="40" rx="5" fill="#9b59b6" opacity="0.3" stroke="#8e44ad" stroke-width="2"/>
-                <text x="200" y="225" text-anchor="middle" fill="white" font-size="14" font-weight="bold">RAM</text>
+                <rect class="drop-zone" id="ram-zone" data-component="ram" x="120" y="210" width="160" height="40" rx="5" fill="#9b59b6" opacity="0.3" stroke="#8e44ad" stroke-width="2"/>
+                <text x="200" y="235" text-anchor="middle" fill="white" font-size="14" font-weight="bold">RAM</text>
 
                 <!-- Zone GPU -->
-                <rect class="drop-zone" id="gpu-zone" data-component="gpu" x="120" y="260" width="160" height="70" rx="5" fill="#e74c3c" opacity="0.3" stroke="#c0392b" stroke-width="2"/>
-                <text x="200" y="300" text-anchor="middle" fill="white" font-size="14" font-weight="bold">GPU</text>
+                <rect class="drop-zone" id="gpu-zone" data-component="gpu" x="120" y="270" width="160" height="70" rx="5" fill="#e74c3c" opacity="0.3" stroke="#c0392b" stroke-width="2"/>
+                <text x="200" y="310" text-anchor="middle" fill="white" font-size="14" font-weight="bold">GPU</text>
 
-                <!-- Zone SSD -->
-                <rect class="drop-zone" id="ssd-zone" data-component="ssd" x="120" y="350" width="70" height="50" rx="5" fill="#f39c12" opacity="0.3" stroke="#d68910" stroke-width="2"/>
-                <text x="155" y="380" text-anchor="middle" fill="white" font-size="12" font-weight="bold">SSD</text>
-
-                <!-- Zone PSU -->
-                <rect class="drop-zone" id="psu-zone" data-component="psu" x="210" y="350" width="70" height="50" rx="5" fill="#1abc9c" opacity="0.3" stroke="#16a085" stroke-width="2"/>
-                <text x="245" y="380" text-anchor="middle" fill="white" font-size="12" font-weight="bold">PSU</text>
+                <!-- Zone Refroidissement -->
+                <rect class="drop-zone" id="cooling-zone" data-component="cooling" x="120" y="360" width="160" height="60" rx="5" fill="#3498db" opacity="0.3" stroke="#2980b9" stroke-width="2"/>
+                <text x="200" y="395" text-anchor="middle" fill="white" font-size="14" font-weight="bold">REFROIDISSEMENT</text>
             </svg>
         </div>
 
@@ -130,7 +122,7 @@ $composantsPlacesJson = json_encode($_SESSION['composantsPlaces']);
         <div class="modal-content">
             <h2>Bienvenue ! 🎮</h2>
             <p>Glissez-déposez les composants sur les zones appropriées du boîtier PC pour assembler votre ordinateur.</p>
-            <p><strong>5 composants à placer :</strong><br>CPU, RAM, GPU, SSD et PSU</p>
+            <p><strong>4 composants à placer :</strong><br>Carte Mère, RAM, GPU et Refroidissement</p>
             <p>Une fois un composant correctement placé, vous pourrez découvrir plus d'informations à son sujet !</p>
             <form method="POST">
                 <button type="submit" name="closeWelcome" class="btn btn-primary">Commencer</button>
@@ -152,9 +144,24 @@ $composantsPlacesJson = json_encode($_SESSION['composantsPlaces']);
     </div>
 </div>
 
+<!-- Modal finale (tous les composants validés) -->
+<div class="modal" id="finalModal">
+    <div class="modal-content">
+        <h2>🎉 Félicitations ! 🎉</h2>
+        <p>Vous avez assemblé tous les composants de votre PC !</p>
+        <p><strong>Vous avez débloqué le jeu final :</strong></p>
+        <p style="font-size: 1.5em; font-weight: bold; color: #667eea;">⚙️ Matériel Obsolète</p>
+        <p>Êtes-vous prêt pour le défi ultime ?</p>
+        <div class="modal-buttons">
+            <button class="btn btn-primary" onclick="goToFinalGame()">Jouer maintenant !</button>
+        </div>
+    </div>
+</div>
+
 <script>
     // Passer les composants déjà placés au JavaScript
     const composantsPlaces = <?= $composantsPlacesJson ?>;
+    const jeuxValides = <?= $jeuxValidesJson ?>;
 </script>
 <script src="js/index.js"></script>
 </body>

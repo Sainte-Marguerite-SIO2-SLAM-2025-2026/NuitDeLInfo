@@ -1,34 +1,36 @@
 // Données des composants
 const components = {
-    cpu: {
-        name: 'Processeur',
-        emoji: '🔲',
-        page: 'cpu.php',
-        color: '#3498db'
+    motherboard: {
+        name: 'Carte mère',
+        emoji: '🔌',
+        page: 'video.php',
+        gameName: 'SysExploit',
+        color: '#1abc9c',
+        sessionKey: 'sysExp'
     },
     ram: {
         name: 'Mémoire RAM',
         emoji: '💾',
-        page: 'ram.php',
-        color: '#9b59b6'
+        page: 'video.php',
+        gameName: 'Licences',
+        color: '#9b59b6',
+        sessionKey: 'licences'
     },
     gpu: {
         name: 'Carte graphique',
         emoji: '🎮',
-        page: 'gpu.php',
-        color: '#e74c3c'
+        page: 'video.php',
+        gameName: 'Abonnement',
+        color: '#e74c3c',
+        sessionKey: 'abonnement'
     },
-    ssd: {
-        name: 'SSD',
-        emoji: '💿',
-        page: 'abonnement.php',
-        color: '#f39c12'
-    },
-    psu: {
-        name: 'Alimentation',
-        emoji: '⚡',
-        page: 'psu.php',
-        color: '#1abc9c'
+    cooling: {
+        name: 'Refroidissement',
+        emoji: '❄️',
+        page: 'video.php',
+        gameName: 'StockDataEU',
+        color: '#3498db',
+        sessionKey: 'stockage'
     }
 };
 
@@ -42,8 +44,8 @@ function init() {
     const rightContainer = document.getElementById('componentsRight');
 
     const componentKeys = Object.keys(components);
-    const leftComponents = componentKeys.slice(0, 3);
-    const rightComponents = componentKeys.slice(3);
+    const leftComponents = componentKeys.slice(0, 2);
+    const rightComponents = componentKeys.slice(2);
 
     leftComponents.forEach(key => createComponentElement(key, leftContainer));
     rightComponents.forEach(key => createComponentElement(key, rightContainer));
@@ -206,6 +208,69 @@ function updatePlacedComponents() {
             }
         });
     }
+
+    // Afficher les validations visuelles pour les jeux complétés
+    if (typeof jeuxValides !== 'undefined') {
+        Object.keys(components).forEach(componentKey => {
+            const comp = components[componentKey];
+            const sessionKey = comp.sessionKey;
+
+            if (jeuxValides[sessionKey] === true) {
+                const zone = document.querySelector(`.drop-zone[data-component="${componentKey}"]`);
+                if (zone) {
+                    // Ajouter une coche de validation
+                    addValidationCheckmark(zone, componentKey);
+                }
+            }
+        });
+    }
+}
+
+function addValidationCheckmark(zone, componentKey) {
+    // Vérifier si la coche n'existe pas déjà
+    const existingCheck = document.getElementById(`check-${componentKey}`);
+    if (existingCheck) return;
+
+    // Créer un élément SVG pour la coche
+    const svgNS = "http://www.w3.org/2000/svg";
+    const checkGroup = document.createElementNS(svgNS, "g");
+    checkGroup.setAttribute("id", `check-${componentKey}`);
+    checkGroup.classList.add("validation-check");
+
+    // Cercle de fond
+    const circle = document.createElementNS(svgNS, "circle");
+    const bbox = zone.getBBox();
+    circle.setAttribute("cx", bbox.x + bbox.width - 15);
+    circle.setAttribute("cy", bbox.y + 15);
+    circle.setAttribute("r", "12");
+    circle.setAttribute("fill", "#27ae60");
+    circle.setAttribute("stroke", "white");
+    circle.setAttribute("stroke-width", "2");
+
+    // Icône de coche
+    const checkPath = document.createElementNS(svgNS, "path");
+    checkPath.setAttribute("d", `M ${bbox.x + bbox.width - 19} ${bbox.y + 15} l 3 3 l 6 -6`);
+    checkPath.setAttribute("stroke", "white");
+    checkPath.setAttribute("stroke-width", "2");
+    checkPath.setAttribute("fill", "none");
+    checkPath.setAttribute("stroke-linecap", "round");
+
+    checkGroup.appendChild(circle);
+    checkGroup.appendChild(checkPath);
+
+    // Ajouter au SVG parent
+    zone.parentNode.appendChild(checkGroup);
+
+    // Animation d'apparition
+    checkGroup.style.opacity = "0";
+    checkGroup.style.transform = "scale(0)";
+    checkGroup.style.transformOrigin = `${bbox.x + bbox.width - 15}px ${bbox.y + 15}px`;
+
+    setTimeout(() => {
+        checkGroup.style.transition = "all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)";
+        checkGroup.style.opacity = "1";
+        checkGroup.style.transform = "scale(1)";
+    }, 100);
 }
 
 // Démarrer l'application quand le DOM est chargé
