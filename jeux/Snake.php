@@ -23,30 +23,6 @@
 
     <canvas id="gameCanvas"></canvas>
 
-    <div class="rules-panel" id="rulesPanel">
-        <div class="rules-content">
-            <h2>[ SNAKE RULES ]</h2>
-            <div class="rules-text">
-                <p class="rule-section">OBJECTIVE:</p>
-                <p>Guide the snake to eat the red pixels. Each pixel increases your score and makes the snake grow longer.</p>
-
-                <p class="rule-section">CONTROLS:</p>
-                <p>KEYBOARD: Use arrow keys to change direction</p>
-                <p>MOBILE: Use the directional buttons below the game area</p>
-
-                <p class="rule-section">GAME OVER:</p>
-                <p>The game ends if you hit the walls or collide with your own body.</p>
-
-                <p class="rule-section">SPEED:</p>
-                <p>The snake speeds up every 50 points. Can you handle the maximum velocity?</p>
-
-                <p class="rule-section">AESTHETIC:</p>
-                <p>This game pays tribute to classic arcade terminals and early computer graphics from the 1980s era.</p>
-            </div>
-            <button class="btn-close-rules" onclick="toggleRules()">CLOSE</button>
-        </div>
-    </div>
-
     <div class="touch-controls">
         <button class="touch-btn up" ontouchstart="changeDirection(0, -1)" onclick="changeDirection(0, -1)">▲</button>
         <button class="touch-btn left" ontouchstart="changeDirection(-1, 0)" onclick="changeDirection(-1, 0)">◄</button>

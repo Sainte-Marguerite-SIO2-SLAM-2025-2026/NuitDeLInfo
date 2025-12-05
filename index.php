@@ -186,6 +186,17 @@ if($showFinalModal) {
     </div>
 <?php endif; ?>
 
+<!-- Boutons Reset et Snake Secret -->
+<div class="secret-buttons-container">
+    <!-- Bouton Snake Secret (derrière) -->
+    <button class="btn-snake-secret" id="snakeBtn" onclick="window.location.href='jeux/Snake.php'">
+        <img src="images/pixil-frame-0%20(1).png" alt="Snake" onerror="this.style.display='none'; this.parentElement.innerHTML='🐍';">
+    </button>
+
+    <!-- Bouton Reset (devant, déplaçable) -->
+    <div class="btn-reset" id="resetBtn"></div>
+</div>
+
 <!-- Modal de confirmation -->
 <div class="modal" id="confirmModal">
     <div class="modal-content">
