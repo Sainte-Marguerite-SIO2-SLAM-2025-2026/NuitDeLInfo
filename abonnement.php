@@ -1,3 +1,27 @@
+<?php
+session_start();
+
+// Gérer la validation du jeu
+if (isset($_POST['validate_game']) && $_POST['validate_game'] === 'abonnement') {
+    if (!isset($_SESSION['jeuxValides'])) {
+        $_SESSION['jeuxValides'] = [];
+    }
+    $_SESSION['jeuxValides']['abonnement'] = true;
+
+    // Retourner une réponse simple
+    echo "success";
+    exit;
+}
+
+// Réinitialiser le statut du jeu au chargement de la page (seulement en GET)
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    if (!isset($_SESSION['jeuxValides'])) {
+        $_SESSION['jeuxValides'] = [];
+    }
+    $_SESSION['jeuxValides']['abonnement'] = false;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>

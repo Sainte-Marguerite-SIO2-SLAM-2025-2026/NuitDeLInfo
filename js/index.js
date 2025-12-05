@@ -197,3 +197,104 @@ function goToPage() {
         currentKey = null;
     }
 }
+
+// Gestion du bouton Reset déplaçable
+const resetBtn = document.getElementById('resetBtn');
+const snakeBtn = document.getElementById('snakeBtn');
+let isDragging = false;
+let currentX;
+let currentY;
+let initialX;
+let initialY;
+let xOffset = 0;
+let yOffset = 0;
+
+resetBtn.addEventListener('mousedown', dragStart);
+resetBtn.addEventListener('touchstart', dragStart);
+
+document.addEventListener('mousemove', drag);
+document.addEventListener('touchmove', drag);
+
+document.addEventListener('mouseup', dragEnd);
+document.addEventListener('touchend', dragEnd);
+
+// Double-clic pour reset
+resetBtn.addEventListener('dblclick', function() {
+    if(confirm('Voulez-vous vraiment réinitialiser le site ?')) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.innerHTML = '<input type="hidden" name="resetSite" value="1">';
+        document.body.appendChild(form);
+        form.submit();
+    }
+});
+
+function dragStart(e) {
+    if (e.type === 'touchstart') {
+        initialX = e.touches[0].clientX - xOffset;
+        initialY = e.touches[0].clientY - yOffset;
+    } else {
+        initialX = e.clientX - xOffset;
+        initialY = e.clientY - yOffset;
+    }
+
+    if (e.target === resetBtn) {
+        isDragging = true;
+        resetBtn.classList.add('dragging');
+    }
+}
+
+function drag(e) {
+    if (isDragging) {
+        e.preventDefault();
+
+        if (e.type === 'touchmove') {
+            currentX = e.touches[0].clientX - initialX;
+            currentY = e.touches[0].clientY - initialY;
+        } else {
+            currentX = e.clientX - initialX;
+            currentY = e.clientY - initialY;
+        }
+
+        xOffset = currentX;
+        yOffset = currentY;
+
+        setTranslate(currentX, currentY, resetBtn);
+
+        // Vérifier si le bouton Snake est révélé
+        checkSnakeRevealed();
+    }
+}
+
+function dragEnd(e) {
+    initialX = currentX;
+    initialY = currentY;
+    isDragging = false;
+    resetBtn.classList.remove('dragging');
+}
+
+function setTranslate(xPos, yPos, el) {
+    el.style.transform = `translate(${xPos}px, ${yPos}px)`;
+}
+
+function checkSnakeRevealed() {
+    const resetRect = resetBtn.getBoundingClientRect();
+    const snakeRect = snakeBtn.getBoundingClientRect();
+
+    // Calculer la distance entre les centres
+    const resetCenterX = resetRect.left + resetRect.width / 2;
+    const resetCenterY = resetRect.top + resetRect.height / 2;
+    const snakeCenterX = snakeRect.left + snakeRect.width / 2;
+    const snakeCenterY = snakeRect.top + snakeRect.height / 2;
+
+    const distance = Math.sqrt(
+        Math.pow(resetCenterX - snakeCenterX, 2) +
+        Math.pow(resetCenterY - snakeCenterY, 2)
+    );
+
+    if (distance > 40) {
+        snakeBtn.classList.add('revealed');
+    } else {
+        snakeBtn.classList.remove('revealed');
+    }
+}

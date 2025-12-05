@@ -5,16 +5,51 @@ const highScoreElement = document.getElementById('highScore');
 const gameOverElement = document.getElementById('gameOver');
 const finalScoreElement = document.getElementById('finalScore');
 const startBtn = document.getElementById('startBtn');
-const rulesPanel = document.getElementById('rulesPanel');
+
+// Charger les images des fruits personnalisés
+const fruitImages = [];
+const imagePaths = [
+    "../images/pixil-frame-0(2).png",
+    "../images/pixil-frame-0(3).png"
+];
+
+console.log('🔍 Tentative de chargement des images depuis:', imagePaths);
+console.log('📁 Emplacement du script:', window.location.href);
+
+imagePaths.forEach((path, index) => {
+    const img = new Image();
+    img.src = path;
+    fruitImages.push(img);
+    console.log(`Tentative ${index + 1}: ${img.src}`);
+});
+
+let imagesLoaded = 0;
+let allImagesReady = false;
+const totalImages = fruitImages.length;
+
+fruitImages.forEach((img, index) => {
+    img.onload = () => {
+        imagesLoaded++;
+        console.log(`✅ Image ${index + 1}/${totalImages} chargée avec succès!`);
+        console.log(`   Dimensions: ${img.width}x${img.height}`);
+        if (imagesLoaded === totalImages) {
+            allImagesReady = true;
+            console.log('🎉 TOUTES LES IMAGES SONT CHARGÉES !');
+        }
+    };
+    img.onerror = (e) => {
+        console.error(`❌ ERREUR Image ${index + 1}: ${img.src}`);
+        console.error('Vérifiez que le fichier existe et que le nom est exact');
+    };
+});
 
 // Initialiser les dimensions du canvas
 function initCanvas() {
     const container = document.querySelector('.game-container');
     const containerSize = Math.min(container.clientWidth, container.clientHeight);
-    canvas.width = containerSize - 4; // -4 pour la bordure
+    canvas.width = containerSize - 4;
     canvas.height = containerSize - 4 - document.querySelector('.scoreboard').clientHeight;
 
-    // Ajuster si les contrôles tactiles sont visibles
     const touchControls = document.querySelector('.touch-controls');
     if (window.getComputedStyle(touchControls).display !== 'none') {
         canvas.height -= touchControls.clientHeight;
@@ -24,8 +59,9 @@ function initCanvas() {
 // Variables du jeu
 const gridSize = 20;
 let tileCount;
+let gridCount;
 let snake = [];
-let foods = []; // Tableau pour plusieurs fruits
+let foods = [];
 let dx = 0;
 let dy = 0;
 let score = 0;
@@ -40,6 +76,7 @@ highScoreElement.textContent = highScore;
 window.addEventListener('load', () => {
     initCanvas();
     tileCount = Math.floor(canvas.width / gridSize);
+    gridCount = tileCount;
     drawInitialScreen();
 });
 
@@ -48,6 +85,7 @@ window.addEventListener('resize', () => {
     if (!isRunning) {
         initCanvas();
         tileCount = Math.floor(canvas.width / gridSize);
+        gridCount = tileCount;
         drawInitialScreen();
     }
 });
@@ -110,7 +148,7 @@ function drawGame() {
         if (head.x === foods[i].x && head.y === foods[i].y) {
             score += 10;
             scoreElement.textContent = score;
-            foods.splice(i, 1); // Retirer le fruit mangé
+            foods.splice(i, 1);
             foodEaten = true;
 
             // Augmenter la vitesse progressivement
@@ -123,7 +161,7 @@ function drawGame() {
     }
 
     if (foodEaten) {
-        generateFood(); // Générer un nouveau fruit
+        generateFood();
     } else {
         snake.pop();
     }
@@ -143,27 +181,81 @@ function drawGame() {
         ctx.shadowBlur = 0;
     });
 
-    // Dessiner tous les fruits avec effet clignotant
-    const pulseSpeed = Math.sin(Date.now() / 200) * 0.3 + 0.7;
+    // Dessiner tous les fruits
     foods.forEach(food => {
-        ctx.fillStyle = `rgba(255, 0, 0, ${pulseSpeed})`;
-        ctx.shadowColor = '#f00';
-        ctx.shadowBlur = 10;
-        ctx.fillRect(
-            food.x * gridSize + 1,
-            food.y * gridSize + 1,
-            gridSize - 2,
-            gridSize - 2
-        );
-        ctx.shadowBlur = 0;
+        // Vérifier que la position est valide
+        if (food.x < 0 || food.x >= tileCount || food.y < 0 || food.y >= tileCount) {
+            console.error('Fruit hors limites:', food, 'tileCount:', tileCount);
+            return;
+        }
+
+        const img = fruitImages[food.fruitIndex];
+
+        // Calculer la position exacte en pixels
+        const pixelX = food.x * gridSize;
+        const pixelY = food.y * gridSize;
+
+        // Vérifier si l'image est chargée
+        if (img && img.complete && img.naturalHeight > 0) {
+            // Dessiner l'image avec effet pulsing
+            const pulse = Math.sin(Date.now() / 200) * 0.1 + 0.9;
+            const size = gridSize * pulse;
+            const offset = (gridSize - size) / 2;
+
+            ctx.shadowColor = '#ff0';
+            ctx.shadowBlur = 8;
+
+            ctx.drawImage(
+                img,
+                pixelX + offset,
+                pixelY + offset,
+                size,
+                size
+            );
+
+            ctx.shadowBlur = 0;
+        } else {
+            // Fallback : carré rouge avec message dans la console
+            if (!img.complete) {
+                console.warn(`⏳ Image ${food.fruitIndex} en cours de chargement...`);
+            } else if (img.naturalHeight === 0) {
+                console.error(`❌ Image ${food.fruitIndex} n'a pas pu être chargée (naturalHeight = 0)`);
+            }
+
+            ctx.fillStyle = '#f00';
+            ctx.shadowColor = '#f00';
+            ctx.shadowBlur = 10;
+            ctx.fillRect(
+                pixelX + 2,
+                pixelY + 2,
+                gridSize - 4,
+                gridSize - 4
+            );
+            ctx.shadowBlur = 0;
+        }
     });
 }
 
 function generateFood() {
+    // S'assurer que tileCount est défini et valide
+    if (!tileCount || tileCount < 3) {
+        console.error('tileCount invalide:', tileCount);
+        return;
+    }
+
+    // Générer une position valide STRICTEMENT à l'intérieur du terrain
+    const maxPos = tileCount - 1;
     const newFood = {
-        x: Math.floor(Math.random() * (tileCount - 1)), // -1 pour éviter les bords
-        y: Math.floor(Math.random() * (tileCount - 1))
+        x: Math.floor(Math.random() * (maxPos - 1)) + 1, // Entre 1 et maxPos-1
+        y: Math.floor(Math.random() * (maxPos - 1)) + 1,
+        fruitIndex: Math.floor(Math.random() * fruitImages.length)
     };
+
+    // Vérifier que la position est valide
+    if (newFood.x < 0 || newFood.x >= tileCount || newFood.y < 0 || newFood.y >= tileCount) {
+        console.error('Position invalide générée:', newFood);
+        return;
+    }
 
     // Vérifier que la nourriture n'apparaît pas sur le serpent
     let onSnake = false;
@@ -188,6 +280,7 @@ function generateFood() {
         return;
     }
 
+    console.log(`🍎 Fruit généré à (${newFood.x}, ${newFood.y}) - Max: ${maxPos}, Image: ${newFood.fruitIndex}`);
     foods.push(newFood);
 }
 
@@ -196,9 +289,10 @@ function startGame() {
 
     initCanvas();
     tileCount = Math.floor(canvas.width / gridSize);
+    gridCount = tileCount;
 
     snake = [{x: Math.floor(tileCount/2), y: Math.floor(tileCount/2)}];
-    foods = []; // Réinitialiser les fruits
+    foods = [];
     dx = 1;
     dy = 0;
     score = 0;
@@ -206,7 +300,6 @@ function startGame() {
     scoreElement.textContent = score;
     isRunning = true;
     gameOverElement.style.display = 'none';
-    rulesPanel.style.display = 'none';
     startBtn.textContent = 'PLAYING...';
     startBtn.disabled = true;
 
@@ -249,7 +342,6 @@ function restartGame() {
 }
 
 function goHome() {
-    // Arrêter le jeu en cours si nécessaire
     if (isRunning) {
         isRunning = false;
         clearInterval(gameLoop);
@@ -257,19 +349,8 @@ function goHome() {
         startBtn.disabled = false;
     }
 
-    // Fermer l'écran Game Over si ouvert
     gameOverElement.style.display = 'none';
-
-    // Rediriger vers la page d'accueil
-    window.location.href = '../index.php'; // Modifiez ce chemin selon votre structure
-}
-
-function toggleRules() {
-    if (rulesPanel.style.display === 'flex') {
-        rulesPanel.style.display = 'none';
-    } else {
-        rulesPanel.style.display = 'flex';
-    }
+    window.location.href = '../index.php';
 }
 
 // Contrôles au clavier
