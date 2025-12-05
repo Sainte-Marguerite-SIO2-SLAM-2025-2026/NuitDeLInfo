@@ -8,8 +8,6 @@ if (isset($_POST['validate_game']) && $_POST['validate_game'] === 'licences') {
     }
     $_SESSION['jeuxValides']['licences'] = true;
 
-    // Retourner une réponse simple
-    echo "success";
     exit;
 }
 
