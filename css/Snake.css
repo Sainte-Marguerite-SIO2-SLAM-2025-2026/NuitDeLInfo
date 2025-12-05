@@ -1,0 +1,431 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Courier New', monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: #000;
+    padding: 20px;
+    overflow: auto;
+}
+
+.game-container {
+    width: 100%;
+    max-width: 90vmin;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    border: 4px solid #0f0;
+    box-shadow:
+            0 0 10px #0f0,
+            inset 0 0 10px #0f0;
+    background: #000;
+    margin: auto;
+}
+
+.scoreboard {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: #000;
+    border-bottom: 2px solid #0f0;
+    gap: 15px;
+}
+
+.btn-home {
+    padding: 8px 12px;
+    font-size: clamp(1rem, 3vw, 1.5rem);
+    font-family: 'Courier New', monospace;
+    background: #000;
+    color: #0f0;
+    border: 2px solid #0f0;
+    cursor: pointer;
+    text-shadow: 0 0 5px #0f0;
+    box-shadow: 0 0 10px #0f0;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.btn-home:hover {
+    background: #0f0;
+    color: #000;
+    box-shadow: 0 0 20px #0f0;
+    transform: scale(1.1);
+}
+
+.btn-home:active {
+    transform: scale(0.95);
+}
+
+.btn-rules {
+    padding: 8px 20px;
+    font-size: clamp(0.8rem, 2vw, 1rem);
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    background: #000;
+    color: #0f0;
+    border: 2px solid #0f0;
+    cursor: pointer;
+    letter-spacing: 2px;
+    text-shadow: 0 0 5px #0f0;
+    box-shadow: 0 0 10px #0f0;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    flex-shrink: 0;
+}
+
+.btn-rules:hover {
+    background: #0f0;
+    color: #000;
+    box-shadow: 0 0 20px #0f0;
+}
+
+.btn-rules:active {
+    transform: scale(0.95);
+}
+
+.score-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    color: #0f0;
+    text-shadow: 0 0 5px #0f0;
+    flex: 1;
+}
+
+.score-item .label {
+    font-size: clamp(0.7rem, 2vw, 1rem);
+    letter-spacing: 2px;
+}
+
+.score-item .value {
+    font-size: clamp(1.2rem, 3vw, 2rem);
+    font-weight: bold;
+}
+
+.btn-start, .btn-restart {
+    padding: 10px 30px;
+    font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    background: #000;
+    color: #0f0;
+    border: 2px solid #0f0;
+    cursor: pointer;
+    letter-spacing: 3px;
+    text-shadow: 0 0 5px #0f0;
+    box-shadow: 0 0 10px #0f0;
+    transition: all 0.2s;
+    text-transform: uppercase;
+}
+
+.btn-start:hover, .btn-restart:hover {
+    background: #0f0;
+    color: #000;
+    box-shadow: 0 0 20px #0f0;
+}
+
+.btn-start:active, .btn-restart:active {
+    transform: scale(0.95);
+}
+
+canvas {
+    width: 100%;
+    height: 100%;
+    flex: 1;
+    display: block;
+    background: #000;
+    image-rendering: pixelated;
+}
+
+.touch-controls {
+    display: none;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    padding: 15px;
+    background: #000;
+    border-top: 2px solid #0f0;
+}
+
+.touch-btn {
+    padding: 15px;
+    font-size: clamp(1.2rem, 4vw, 1.8rem);
+    background: #000;
+    color: #0f0;
+    border: 2px solid #0f0;
+    cursor: pointer;
+    transition: all 0.1s;
+    user-select: none;
+    text-shadow: 0 0 5px #0f0;
+    box-shadow: 0 0 5px #0f0;
+}
+
+.touch-btn:active {
+    background: #0f0;
+    color: #000;
+    box-shadow: 0 0 15px #0f0;
+}
+
+.touch-btn.up { grid-column: 2; grid-row: 1; }
+.touch-btn.left { grid-column: 1; grid-row: 2; }
+.touch-btn.right { grid-column: 3; grid-row: 2; }
+.touch-btn.down { grid-column: 2; grid-row: 2; }
+
+.game-over {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.game-over-content {
+    text-align: center;
+    padding: 40px;
+    border: 4px solid #f00;
+    box-shadow:
+            0 0 20px #f00,
+            inset 0 0 20px #f00;
+    background: #000;
+    min-width: 300px;
+}
+
+.game-over h2 {
+    font-size: clamp(2rem, 6vw, 3rem);
+    color: #f00;
+    text-shadow: 0 0 10px #f00;
+    letter-spacing: 5px;
+    margin-bottom: 20px;
+}
+
+.game-over p {
+    font-size: clamp(1.2rem, 4vw, 1.5rem);
+    color: #0f0;
+    text-shadow: 0 0 5px #0f0;
+    margin-bottom: 30px;
+    letter-spacing: 2px;
+}
+
+.game-over-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-home-over {
+    padding: 15px 40px;
+    font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    background: #000;
+    color: #ff0;
+    border: 2px solid #ff0;
+    cursor: pointer;
+    letter-spacing: 3px;
+    text-shadow: 0 0 5px #ff0;
+    box-shadow: 0 0 10px #ff0;
+    transition: all 0.2s;
+    text-transform: uppercase;
+}
+
+.btn-home-over:hover {
+    background: #ff0;
+    color: #000;
+    box-shadow: 0 0 20px #ff0;
+}
+
+.btn-home-over:active {
+    transform: scale(0.95);
+}
+
+.rules-panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    padding: 20px;
+}
+
+.rules-content {
+    background: #000;
+    border: 4px solid #0f0;
+    box-shadow:
+            0 0 20px #0f0,
+            inset 0 0 20px #0f0;
+    padding: 30px;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.rules-content h2 {
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    color: #0f0;
+    text-shadow: 0 0 10px #0f0;
+    text-align: center;
+    letter-spacing: 5px;
+    margin-bottom: 30px;
+}
+
+.rules-text {
+    color: #0f0;
+    text-shadow: 0 0 5px #0f0;
+    line-height: 1.8;
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+}
+
+.rules-text p {
+    margin-bottom: 15px;
+}
+
+.rule-section {
+    color: #ff0;
+    text-shadow: 0 0 5px #ff0;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.rule-section:first-of-type {
+    margin-top: 0;
+}
+
+.btn-close-rules {
+    display: block;
+    margin: 30px auto 0;
+    padding: 12px 40px;
+    font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    background: #000;
+    color: #0f0;
+    border: 2px solid #0f0;
+    cursor: pointer;
+    letter-spacing: 3px;
+    text-shadow: 0 0 5px #0f0;
+    box-shadow: 0 0 10px #0f0;
+    transition: all 0.2s;
+    text-transform: uppercase;
+}
+
+.btn-close-rules:hover {
+    background: #0f0;
+    color: #000;
+    box-shadow: 0 0 20px #0f0;
+}
+
+.btn-close-rules:active {
+    transform: scale(0.95);
+}
+
+.rules-content::-webkit-scrollbar {
+    width: 10px;
+}
+
+.rules-content::-webkit-scrollbar-track {
+    background: #000;
+    border: 1px solid #0f0;
+}
+
+.rules-content::-webkit-scrollbar-thumb {
+    background: #0f0;
+    box-shadow: 0 0 5px #0f0;
+}
+
+.rules-content::-webkit-scrollbar-thumb:hover {
+    background: #0f0;
+    box-shadow: 0 0 10px #0f0;
+}
+
+.btn-restart {
+    padding: 15px 40px;
+}
+
+@media (max-width: 768px) {
+    .touch-controls {
+        display: grid;
+    }
+
+    body {
+        padding: 10px;
+    }
+
+    .game-container {
+        max-width: 95vmin;
+    }
+
+    .scoreboard {
+        padding: 10px 15px;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .btn-start {
+        padding: 8px 20px;
+    }
+
+    .btn-home, .btn-rules {
+        padding: 6px 10px;
+        font-size: 0.9rem;
+    }
+
+    .rules-content {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 5px;
+    }
+
+    .game-container {
+        border-width: 2px;
+        max-width: 98vmin;
+    }
+
+    .scoreboard {
+        padding: 8px 10px;
+    }
+
+    .touch-controls {
+        padding: 10px;
+        gap: 8px;
+    }
+
+    .touch-btn {
+        padding: 12px;
+    }
+}
+
+@media (orientation: landscape) and (max-height: 700px) {
+    body {
+        padding: 10px;
+    }
+
+    .game-container {
+        max-width: 85vh;
+        max-height: 85vh;
+    }
+}
