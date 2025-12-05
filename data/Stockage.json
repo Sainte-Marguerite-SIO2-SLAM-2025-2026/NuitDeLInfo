@@ -1,0 +1,124 @@
+{
+  "items": [
+    {
+      "id": 1,
+      "text": "Conformité au RGPD garantie",
+      "category": "eu",
+      "type": "avantage"
+    },
+    {
+      "id": 2,
+      "text": "Protection des données personnelles renforcée",
+      "category": "eu",
+      "type": "avantage"
+    },
+    {
+      "id": 3,
+      "text": "Juridiction européenne applicable",
+      "category": "eu",
+      "type": "avantage"
+    },
+    {
+      "id": 4,
+      "text": "Pas de transfert international de données",
+      "category": "eu",
+      "type": "avantage"
+    },
+    {
+      "id": 5,
+      "text": "Souveraineté numérique européenne",
+      "category": "eu",
+      "type": "avantage"
+    },
+    {
+      "id": 6,
+      "text": "Contrôle strict par les autorités européennes",
+      "category": "eu",
+      "type": "avantage"
+    },
+    {
+      "id": 7,
+      "text": "Droit à l'oubli garanti",
+      "category": "eu",
+      "type": "avantage"
+    },
+    {
+      "id": 8,
+      "text": "Latence réduite pour les utilisateurs européens",
+      "category": "eu",
+      "type": "avantage"
+    },
+    {
+      "id": 9,
+      "text": "Standards de sécurité européens stricts",
+      "category": "eu",
+      "type": "avantage"
+    },
+    {
+      "id": 10,
+      "text": "Transparence sur la localisation des données",
+      "category": "eu",
+      "type": "avantage"
+    },
+    {
+      "id": 11,
+      "text": "Risque d'accès par des lois extraterritoriales (CLOUD Act)",
+      "category": "hors_eu",
+      "type": "risque"
+    },
+    {
+      "id": 12,
+      "text": "Protection RGPD non garantie",
+      "category": "hors_eu",
+      "type": "risque"
+    },
+    {
+      "id": 13,
+      "text": "Difficulté en cas de litige juridique",
+      "category": "hors_eu",
+      "type": "risque"
+    },
+    {
+      "id": 14,
+      "text": "Surveillance gouvernementale possible",
+      "category": "hors_eu",
+      "type": "risque"
+    },
+    {
+      "id": 15,
+      "text": "Transfert de données hors UE non sécurisé",
+      "category": "hors_eu",
+      "type": "risque"
+    },
+    {
+      "id": 16,
+      "text": "Perte de contrôle sur vos données personnelles",
+      "category": "hors_eu",
+      "type": "risque"
+    },
+    {
+      "id": 17,
+      "text": "Absence de droit à l'oubli effectif",
+      "category": "hors_eu",
+      "type": "risque"
+    },
+    {
+      "id": 18,
+      "text": "Standards de sécurité variables selon les pays",
+      "category": "hors_eu",
+      "type": "risque"
+    },
+    {
+      "id": 19,
+      "text": "Risque de revente de données à des tiers",
+      "category": "hors_eu",
+      "type": "risque"
+    },
+    {
+      "id": 20,
+      "text": "Difficulté à exercer ses droits RGPD",
+      "category": "hors_eu",
+      "type": "risque"
+    }
+  ]
+}
