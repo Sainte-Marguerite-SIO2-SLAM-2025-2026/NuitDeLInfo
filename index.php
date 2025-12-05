@@ -34,7 +34,7 @@ if(isset($_GET['validated'])) {
 
     // Mapping des composants aux clés de session
     $componentMapping = [
-            'motherboard' => 'sysExp',
+            'motherboard' => 'SysExp',
             'ram' => 'licences',
             'gpu' => 'abonnement',
             'cooling' => 'stockage'
@@ -89,27 +89,30 @@ $jeuxValidesJson = json_encode($_SESSION['jeuxValides']);
         <div class="components-left" id="componentsLeft"></div>
 
         <div class="pc-container">
-            <svg class="pc-svg" viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg">
-                <!-- Boîtier PC -->
-                <rect x="50" y="50" width="300" height="400" rx="10" fill="#2c3e50" stroke="#34495e" stroke-width="3"/>
-                <rect x="60" y="60" width="280" height="380" rx="8" fill="#34495e"/>
+                <svg data-name="Calque 2" version="1.1" viewBox="0 0 548.59 569.95" xmlns="http://www.w3.org/2000/svg">
+                    <image xlink:href="images/boitier.svg" x="0" y="0" width="100%" height="100%" id="image-fond" style="pointer-events: none;"/>
 
-                <!-- Zone Carte Mère -->
-                <rect class="drop-zone" id="motherboard-zone" data-component="motherboard" x="90" y="90" width="220" height="100" rx="5" fill="#1abc9c" opacity="0.3" stroke="#16a085" stroke-width="2"/>
-                <text x="200" y="145" text-anchor="middle" fill="white" font-size="14" font-weight="bold">CARTE MÈRE</text>
+                    <g id="carte_mere">
+                        <image id="carte_mere_image" x="290.45" y="325.54" width="149.51" height="133.28" xlink:href="" />
+                        <rect class="drop-zone" x="290.45" y="325.54" width="149.51" height="133.28" fill="transparent" stroke="#4caf50"  stroke-width="3" stroke-dasharray="5,5"/>
+                    </g>
 
-                <!-- Zone RAM -->
-                <rect class="drop-zone" id="ram-zone" data-component="ram" x="120" y="210" width="160" height="40" rx="5" fill="#9b59b6" opacity="0.3" stroke="#8e44ad" stroke-width="2"/>
-                <text x="200" y="235" text-anchor="middle" fill="white" font-size="14" font-weight="bold">RAM</text>
+                    <g id="ram">
+                        <image id="ram_image" x="78.569" y="267.26" width="150.7" height="35.421" xlink:href="" />
+                        <rect class="drop-zone" x="78.569" y="267.26" width="150.7" height="35.421" fill="transparent" stroke="#4caf50"  stroke-width="3" stroke-dasharray="5,5"/>
+                    </g>
 
-                <!-- Zone GPU -->
-                <rect class="drop-zone" id="gpu-zone" data-component="gpu" x="120" y="270" width="160" height="70" rx="5" fill="#e74c3c" opacity="0.3" stroke="#c0392b" stroke-width="2"/>
-                <text x="200" y="310" text-anchor="middle" fill="white" font-size="14" font-weight="bold">GPU</text>
+                    <g id="gpu">
+                        <image id="gpu_image" x="184.19" y="235.06" width="293.56" height="87.984" xlink:href="" />
+                        <rect class="drop-zone" x="184.19" y="235.06" width="293.56" height="87.984" fill="transparent" stroke="#4caf50"  stroke-width="3" stroke-dasharray="5,5" />
+                    </g>
 
-                <!-- Zone Refroidissement -->
-                <rect class="drop-zone" id="cooling-zone" data-component="cooling" x="120" y="360" width="160" height="60" rx="5" fill="#3498db" opacity="0.3" stroke="#2980b9" stroke-width="2"/>
-                <text x="200" y="395" text-anchor="middle" fill="white" font-size="14" font-weight="bold">REFROIDISSEMENT</text>
-            </svg>
+                    <g id="cooling">
+                        <image id="cooling_image" x="101.75" y="96.602" width="163" height="124" xlink:href="" />
+                        <rect class="drop-zone" x="101.75" y="96.602" width="163" height="124" fill="transparent" stroke="#4caf50"  stroke-width="3" stroke-dasharray="5,5"/>
+                    </g>
+                </svg>
+
         </div>
 
         <div class="components-right" id="componentsRight"></div>
