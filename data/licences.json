@@ -1,0 +1,346 @@
+{
+  "requirements": [
+    { "id": "web", "name": "Site Web", "icon": "🌐" },
+    { "id": "mobile", "name": "Application Mobile", "icon": "📱" },
+    { "id": "database", "name": "Base de Données", "icon": "🗄️" },
+    { "id": "security", "name": "Sécurité", "icon": "🔒" },
+    { "id": "analytics", "name": "Analytiques", "icon": "📊" },
+    { "id": "cloud", "name": "Hébergement Cloud", "icon": "☁️" },
+    { "id": "ai", "name": "Intelligence Artificielle", "icon": "🤖" },
+    { "id": "backend", "name": "Serveur Backend", "icon": "⚙️" },
+    { "id": "frontend", "name": "Interface Utilisateur", "icon": "🎨" },
+    { "id": "testing", "name": "Tests Automatisés", "icon": "🧪" },
+    { "id": "office", "name": "Suite Bureautique", "icon": "📝" },
+    { "id": "video", "name": "Montage Vidéo", "icon": "🎬" },
+    { "id": "design", "name": "Design Graphique", "icon": "🖌️" },
+    { "id": "communication", "name": "Communication", "icon": "💬" },
+    { "id": "crm", "name": "Gestion Client (CRM)", "icon": "👥" },
+    { "id": "email", "name": "Service Email", "icon": "📧" },
+    { "id": "streaming", "name": "Streaming Vidéo", "icon": "📺" },
+    { "id": "backup", "name": "Sauvegarde", "icon": "💾" },
+    { "id": "collaboration", "name": "Travail Collaboratif", "icon": "🤝" },
+    { "id": "ecommerce", "name": "Boutique en Ligne", "icon": "🛒" }
+  ],
+  "licenses": [
+    {
+      "id": 1,
+      "name": "WordPress",
+      "type": "opensource",
+      "price": 0,
+      "features": ["web", "ecommerce"],
+      "description": ["Système de gestion de contenu", "Gestion de boutique en ligne", "Personnalisable"]
+    },
+    {
+      "id": 2,
+      "name": "PostgreSQL",
+      "type": "opensource",
+      "price": 0,
+      "features": ["database"],
+      "description": ["Base de données relationnelle", "Open source et robuste", "Support SQL avancé"]
+    },
+    {
+      "id": 3,
+      "name": "Flutter",
+      "type": "opensource",
+      "price": 0,
+      "features": ["mobile"],
+      "description": ["SDK mobile multiplateforme", "iOS et Android", "Interface native"]
+    },
+    {
+      "id": 4,
+      "name": "Azure Enterprise",
+      "type": "payante",
+      "price": 5000,
+      "features": ["web", "database", "security", "cloud", "backend"],
+      "description": ["Cloud professionnel", "Haute disponibilité", "Support technique 24/7"]
+    },
+    {
+      "id": 5,
+      "name": "Matomo Analytics",
+      "type": "opensource",
+      "price": 0,
+      "features": ["analytics", "web"],
+      "description": ["Alternative à Google Analytics", "Respect de la vie privée", "Données hébergées chez vous"]
+    },
+    {
+      "id": 6,
+      "name": "Analytics Pro Suite",
+      "type": "payante",
+      "price": 4200,
+      "features": ["analytics", "web"],
+      "description": ["Analytiques web avancées", "Suivi en temps réel", "Rapports personnalisés"]
+    },
+    {
+      "id": 7,
+      "name": "SecureGuard Pro",
+      "type": "payante",
+      "price": 6000,
+      "features": ["security"],
+      "description": ["Analyse de sécurité", "Détection de vulnérabilités", "Conformité standards"]
+    },
+    {
+      "id": 8,
+      "name": "LibreOffice",
+      "type": "opensource",
+      "price": 0,
+      "features": ["office"],
+      "description": ["Suite bureautique complète", "Traitement de texte et tableur", "Compatible formats Microsoft"]
+    },
+    {
+      "id": 9,
+      "name": "Authentification Plus",
+      "type": "payante",
+      "price": 2800,
+      "features": ["security", "web", "mobile"],
+      "description": ["Authentification multi-facteurs", "SSO et gestion d'identité", "API universelle"]
+    },
+    {
+      "id": 10,
+      "name": "React Native",
+      "type": "opensource",
+      "price": 0,
+      "features": ["mobile", "frontend"],
+      "description": ["Framework mobile", "JavaScript et React", "Applications natives"]
+    },
+    {
+      "id": 11,
+      "name": "Node.js",
+      "type": "opensource",
+      "price": 0,
+      "features": ["backend", "web"],
+      "description": ["Runtime JavaScript serveur", "Écosystème npm riche", "Performance élevée"]
+    },
+    {
+      "id": 12,
+      "name": "OpenAI Assistant",
+      "type": "opensource",
+      "price": 0,
+      "features": ["ai"],
+      "description": ["Modèles IA locaux", "Traitement du langage", "Open source"]
+    },
+    {
+      "id": 13,
+      "name": "AWS Professional",
+      "type": "payante",
+      "price": 4500,
+      "features": ["cloud", "database", "backend", "streaming"],
+      "description": ["Infrastructure Amazon", "Scalabilité infinie", "Services variés"]
+    },
+    {
+      "id": 14,
+      "name": "AI Business Suite",
+      "type": "payante",
+      "price": 7500,
+      "features": ["ai", "analytics"],
+      "description": ["API IA avancée", "Modèles personnalisables", "Support entreprise"]
+    },
+    {
+      "id": 15,
+      "name": "Selenium",
+      "type": "opensource",
+      "price": 0,
+      "features": ["testing"],
+      "description": ["Tests automatisés", "Multi-navigateurs", "Open source"]
+    },
+    {
+      "id": 16,
+      "name": "TestSuite Pro",
+      "type": "payante",
+      "price": 3200,
+      "features": ["testing", "web", "mobile"],
+      "description": ["Tests automatisés professionnels", "Tests parallèles", "Reporting avancé"]
+    },
+    {
+      "id": 17,
+      "name": "Vue.js",
+      "type": "opensource",
+      "price": 0,
+      "features": ["frontend", "web"],
+      "description": ["Framework JavaScript progressif", "Facile à apprendre", "Performant et léger"]
+    },
+    {
+      "id": 18,
+      "name": "MongoDB Cloud",
+      "type": "payante",
+      "price": 3800,
+      "features": ["database", "cloud"],
+      "description": ["Base NoSQL managée", "Scalabilité automatique", "Backup automatique"]
+    },
+    {
+      "id": 19,
+      "name": "Django",
+      "type": "opensource",
+      "price": 0,
+      "features": ["backend", "web"],
+      "description": ["Framework Python complet", "Admin intégré", "ORM puissant"]
+    },
+    {
+      "id": 20,
+      "name": "Monitoring Enterprise",
+      "type": "payante",
+      "price": 5500,
+      "features": ["analytics", "cloud", "backend"],
+      "description": ["Monitoring complet", "APM et logs centralisés", "Alertes intelligentes"]
+    },
+    {
+      "id": 21,
+      "name": "Kdenlive",
+      "type": "opensource",
+      "price": 0,
+      "features": ["video"],
+      "description": ["Montage vidéo professionnel", "Multi-pistes", "Effets et transitions"]
+    },
+    {
+      "id": 22,
+      "name": "Premier Studio",
+      "type": "payante",
+      "price": 5800,
+      "features": ["video", "design"],
+      "description": ["Montage vidéo avancé", "Effets spéciaux", "Exportation haute qualité"]
+    },
+    {
+      "id": 23,
+      "name": "GIMP",
+      "type": "opensource",
+      "price": 0,
+      "features": ["design"],
+      "description": ["Retouche photo", "Design graphique", "Alternative gratuite"]
+    },
+    {
+      "id": 24,
+      "name": "Design Pro Suite",
+      "type": "payante",
+      "price": 6200,
+      "features": ["design", "video"],
+      "description": ["Suite créative complète", "Design et vidéo", "Bibliothèque d'assets"]
+    },
+    {
+      "id": 25,
+      "name": "Rocket.Chat",
+      "type": "opensource",
+      "price": 0,
+      "features": ["communication", "collaboration"],
+      "description": ["Chat d'équipe", "Vidéoconférence", "Auto-hébergeable"]
+    },
+    {
+      "id": 26,
+      "name": "Teams Enterprise",
+      "type": "payante",
+      "price": 4100,
+      "features": ["communication", "collaboration", "office"],
+      "description": ["Communication unifiée", "Visioconférence illimitée", "Intégration bureautique"]
+    },
+    {
+      "id": 27,
+      "name": "SuiteCRM",
+      "type": "opensource",
+      "price": 0,
+      "features": ["crm"],
+      "description": ["Gestion de la relation client", "Suivi des ventes", "Open source"]
+    },
+    {
+      "id": 28,
+      "name": "Salesforce Pro",
+      "type": "payante",
+      "price": 8500,
+      "features": ["crm", "analytics", "collaboration"],
+      "description": ["CRM leader mondial", "Automatisation des ventes", "Reporting avancé"]
+    },
+    {
+      "id": 29,
+      "name": "Postfix Mail Server",
+      "type": "opensource",
+      "price": 0,
+      "features": ["email"],
+      "description": ["Serveur email", "Fiable et sécurisé", "Utilisé mondialement"]
+    },
+    {
+      "id": 30,
+      "name": "Email Pro Suite",
+      "type": "payante",
+      "price": 2900,
+      "features": ["email", "collaboration"],
+      "description": ["Email professionnel", "Calendrier partagé", "Stockage cloud inclus"]
+    },
+    {
+      "id": 31,
+      "name": "OBS Studio",
+      "type": "opensource",
+      "price": 0,
+      "features": ["streaming", "video"],
+      "description": ["Streaming et enregistrement", "Multi-plateforme", "Scènes personnalisables"]
+    },
+    {
+      "id": 32,
+      "name": "StreamPro Platform",
+      "type": "payante",
+      "price": 6800,
+      "features": ["streaming", "cloud"],
+      "description": ["Plateforme de streaming", "CDN global", "Transcodage automatique"]
+    },
+    {
+      "id": 33,
+      "name": "Duplicati",
+      "type": "opensource",
+      "price": 0,
+      "features": ["backup"],
+      "description": ["Sauvegarde automatique", "Chiffrement intégré", "Multi-destinations"]
+    },
+    {
+      "id": 34,
+      "name": "Backup Enterprise",
+      "type": "payante",
+      "price": 3500,
+      "features": ["backup", "cloud"],
+      "description": ["Sauvegarde automatisée", "Restauration rapide", "Support 24/7"]
+    },
+    {
+      "id": 35,
+      "name": "Nextcloud",
+      "type": "opensource",
+      "price": 0,
+      "features": ["collaboration", "cloud", "office"],
+      "description": ["Stockage cloud privé", "Édition de documents", "Partage sécurisé"]
+    },
+    {
+      "id": 36,
+      "name": "WooCommerce",
+      "type": "opensource",
+      "price": 0,
+      "features": ["ecommerce", "web"],
+      "description": ["Plugin e-commerce", "Paiements en ligne", "Gestion des stocks"]
+    },
+    {
+      "id": 37,
+      "name": "Shopify Plus",
+      "type": "payante",
+      "price": 7200,
+      "features": ["ecommerce", "web", "analytics"],
+      "description": ["Plateforme e-commerce complète", "Hébergement inclus", "Marketing intégré"]
+    },
+    {
+      "id": 38,
+      "name": "Inkscape",
+      "type": "opensource",
+      "price": 0,
+      "features": ["design"],
+      "description": ["Design vectoriel", "Logos et illustrations", "Format SVG natif"]
+    },
+    {
+      "id": 39,
+      "name": "Office Suite Pro",
+      "type": "payante",
+      "price": 4900,
+      "features": ["office", "collaboration", "cloud"],
+      "description": ["Suite bureautique cloud", "Collaboration en temps réel", "Stockage illimité"]
+    },
+    {
+      "id": 40,
+      "name": "Jitsi Meet",
+      "type": "opensource",
+      "price": 0,
+      "features": ["communication", "collaboration"],
+      "description": ["Visioconférence", "Chiffrement de bout en bout", "Sans inscription"]
+    }
+  ]
+}
