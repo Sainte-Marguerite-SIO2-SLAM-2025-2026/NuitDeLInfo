@@ -1,277 +1,199 @@
+// =======================
 // Données des composants
+// =======================
 const components = {
     motherboard: {
+        key: 'motherboard',
         name: 'Carte mère',
-        emoji: '🔌',
+        img: 'images/carte_m.svg',
         page: 'video.php',
-        gameName: 'SysExploit',
-        color: '#1abc9c',
-        sessionKey: 'sysExp'
+        dropZoneId: 'carte_mere',
+        svgImageId: 'carte_mere_image'
     },
     ram: {
+        key: 'ram',
         name: 'Mémoire RAM',
-        emoji: '💾',
+        img: 'images/ram.svg',
         page: 'video.php',
-        gameName: 'Licences',
-        color: '#9b59b6',
-        sessionKey: 'licences'
+        dropZoneId: 'ram',
+        svgImageId: 'ram_image'
     },
     gpu: {
+        key: 'gpu',
         name: 'Carte graphique',
-        emoji: '🎮',
+        img: 'images/carte_grap.svg',
         page: 'video.php',
-        gameName: 'Abonnement',
-        color: '#e74c3c',
-        sessionKey: 'abonnement'
+        dropZoneId: 'gpu',
+        svgImageId: 'gpu_image'
     },
     cooling: {
+        key: 'cooling',
         name: 'Refroidissement',
-        emoji: '❄️',
+        img: 'images/ventilateur.svg',
         page: 'video.php',
-        gameName: 'StockDataEU',
-        color: '#3498db',
-        sessionKey: 'stockage'
+        dropZoneId: 'cooling',
+        svgImageId: 'cooling_image'
     }
 };
 
-let currentComponent = null;
+// =======================
+// Variables globales
+// =======================
 let draggedElement = null;
-let originalPosition = null;
+let currentKey = null;
+let originalParent = null;
+let originalNextSibling = null;
+let lastDropZone = null;
 
+// =======================
 // Initialisation
-function init() {
+// =======================
+document.addEventListener('DOMContentLoaded', () => {
     const leftContainer = document.getElementById('componentsLeft');
     const rightContainer = document.getElementById('componentsRight');
 
-    const componentKeys = Object.keys(components);
-    const leftComponents = componentKeys.slice(0, 2);
-    const rightComponents = componentKeys.slice(2);
+    const keys = Object.keys(components);
+    const leftKeys = keys.slice(0, 2);
+    const rightKeys = keys.slice(2);
 
-    leftComponents.forEach(key => createComponentElement(key, leftContainer));
-    rightComponents.forEach(key => createComponentElement(key, rightContainer));
+    leftKeys.forEach(key => createComponentDiv(key, leftContainer));
+    rightKeys.forEach(key => createComponentDiv(key, rightContainer));
 
     setupDropZones();
-    updatePlacedComponents();
-}
+});
 
-function createComponentElement(key, container) {
+// =======================
+// Création des div composants
+// =======================
+function createComponentDiv(key, container) {
     const comp = components[key];
+
     const div = document.createElement('div');
-    div.className = 'component';
-    div.draggable = true;
+    div.classList.add('component');
+    div.setAttribute('draggable', 'true');
     div.dataset.component = key;
 
-    const emojiDiv = document.createElement('div');
-    emojiDiv.style.fontSize = '50px';
-    emojiDiv.textContent = comp.emoji;
+    const img = document.createElement('img');
+    img.src = comp.img;
+    img.alt = comp.name;
+    div.appendChild(img);
 
-    const nameDiv = document.createElement('div');
-    nameDiv.className = 'component-name';
-    nameDiv.textContent = comp.name;
+    const name = document.createElement('div');
+    name.classList.add('component-name');
+    name.textContent = comp.name;
+    div.appendChild(name);
 
-    div.appendChild(emojiDiv);
-    div.appendChild(nameDiv);
+    container.appendChild(div);
 
     div.addEventListener('dragstart', handleDragStart);
     div.addEventListener('dragend', handleDragEnd);
-
-    container.appendChild(div);
 }
 
+// =======================
+// Drag handlers
+// =======================
 function handleDragStart(e) {
     draggedElement = e.target;
-    currentComponent = e.target.dataset.component;
+    currentKey = e.target.dataset.component;
+    originalParent = e.target.parentNode;
+    originalNextSibling = e.target.nextSibling;
     e.target.classList.add('dragging');
-
-    // Sauvegarder la position originale
-    originalPosition = {
-        parent: e.target.parentNode,
-        nextSibling: e.target.nextSibling
-    };
 }
 
 function handleDragEnd(e) {
     e.target.classList.remove('dragging');
 }
 
+// =======================
+// Setup drop zones
+// =======================
 function setupDropZones() {
-    const dropZones = document.querySelectorAll('.drop-zone');
+    Object.values(components).forEach(comp => {
+        const zone = document.querySelector(`#${comp.dropZoneId} .drop-zone`);
+        if (!zone) return;
 
-    dropZones.forEach(zone => {
-        zone.addEventListener('dragover', handleDragOver);
-        zone.addEventListener('dragleave', handleDragLeave);
-        zone.addEventListener('drop', handleDrop);
+        zone.addEventListener('dragover', e => e.preventDefault());
+
+        zone.addEventListener('drop', e => {
+            e.preventDefault();
+
+            if (!currentKey) return;
+
+            // Vérifier que le composant correspond à la zone
+            if (currentKey !== comp.key) {
+                resetComponentPosition();
+                return;
+            }
+
+            // Marquer la zone comme remplie (pointillé légèrement plus foncé)
+            zone.style.opacity = '0.8';
+
+            // Sauvegarder la dernière zone de drop pour la modal
+            lastDropZone = zone;
+
+            // Afficher le modal
+            showConfirmModal(comp.key);
+
+            // Afficher l'image dans le SVG
+            const svgImg = document.getElementById(comp.svgImageId);
+            if (svgImg) svgImg.setAttribute('xlink:href', comp.img);
+
+            // Ne pas supprimer le draggable ici, on le fera si l'utilisateur clique sur "En savoir plus"
+        });
     });
 }
 
-function handleDragOver(e) {
-    e.preventDefault();
-    const zoneComponent = e.target.dataset.component;
-
-    if (currentComponent === zoneComponent && !e.target.classList.contains('filled')) {
-        e.target.classList.add('drag-over');
-    }
-}
-
-function handleDragLeave(e) {
-    e.target.classList.remove('drag-over');
-}
-
-function handleDrop(e) {
-    e.preventDefault();
-    e.target.classList.remove('drag-over');
-
-    const zoneComponent = e.target.dataset.component;
-
-    if (currentComponent === zoneComponent && !e.target.classList.contains('filled')) {
-        e.target.classList.add('filled');
-        e.target.style.opacity = '0.8';
-
-        // Envoyer à PHP pour enregistrer dans la session
-        saveComponentToSession(currentComponent);
-
-        showConfirmModal(currentComponent);
-    } else {
-        // Mauvaise zone, remettre à la position originale
-        resetComponentPosition();
-    }
-}
-
-function saveComponentToSession(component) {
-    fetch('index.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: 'selectComponent=1&component=' + component
-    })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Composant enregistré:', data);
-        })
-        .catch(error => console.error('Erreur:', error));
-}
-
+// =======================
+// Reset position si mauvais drop ou "Rester ici"
+// =======================
 function resetComponentPosition() {
-    if (originalPosition && draggedElement) {
-        if (originalPosition.nextSibling) {
-            originalPosition.parent.insertBefore(draggedElement, originalPosition.nextSibling);
-        } else {
-            originalPosition.parent.appendChild(draggedElement);
-        }
-    }
+    if (!draggedElement) return;
+    if (originalNextSibling) originalParent.insertBefore(draggedElement, originalNextSibling);
+    else originalParent.appendChild(draggedElement);
 }
 
-function showConfirmModal(componentKey) {
+// =======================
+// Modal confirmation
+// =======================
+function showConfirmModal(key) {
+    const comp = components[key];
     const modal = document.getElementById('confirmModal');
-    const comp = components[componentKey];
-
-    document.getElementById('modalTitle').textContent = `${comp.emoji} ${comp.name}`;
-    document.getElementById('modalText').textContent = `Excellent ! Vous avez correctement placé le ${comp.name.toLowerCase()} !`;
+    document.getElementById('modalTitle').textContent = comp.name;
+    document.getElementById('modalText').textContent = `Vous avez placé correctement le ${comp.name} !`;
 
     modal.classList.add('active');
 }
 
-function closeWelcomeModal() {
-    document.getElementById('welcomeModal').classList.remove('active');
-}
-
+// =======================
+// Actions modal
+// =======================
 function stayOnPage() {
     const modal = document.getElementById('confirmModal');
     modal.classList.remove('active');
 
-    // Remettre le composant à sa place
-    resetComponentPosition();
+    // Remettre le composant draggable à sa position initiale
+    if (draggedElement) resetComponentPosition();
 
-    // Réactiver la zone
-    const zone = document.querySelector(`.drop-zone[data-component="${currentComponent}"]`);
-    if (zone) {
-        zone.classList.remove('filled');
-        zone.style.opacity = '0.3';
+    // Réinitialiser le SVG si nécessaire
+    if (currentKey) {
+        const comp = components[currentKey];
+        const svgImg = document.getElementById(comp.svgImageId);
+        if (svgImg) svgImg.setAttribute('xlink:href', '');
     }
 }
 
 function goToPage() {
-    const comp = components[currentComponent];
-    // Redirection vers la page PHP
-    window.location.href = comp.page;
-}
+    const modal = document.getElementById('confirmModal');
+    modal.classList.remove('active');
 
-function updatePlacedComponents() {
-    // Marquer les zones déjà remplies depuis la session PHP
-    if (typeof composantsPlaces !== 'undefined') {
-        composantsPlaces.forEach(component => {
-            const zone = document.querySelector(`.drop-zone[data-component="${component}"]`);
-            if (zone) {
-                zone.classList.add('filled');
-                zone.style.opacity = '0.8';
-            }
-        });
-    }
+    // Supprimer le draggable définitivement
+    if (draggedElement) draggedElement.remove();
+    draggedElement = null;
 
-    // Afficher les validations visuelles pour les jeux complétés
-    if (typeof jeuxValides !== 'undefined') {
-        Object.keys(components).forEach(componentKey => {
-            const comp = components[componentKey];
-            const sessionKey = comp.sessionKey;
-
-            if (jeuxValides[sessionKey] === true) {
-                const zone = document.querySelector(`.drop-zone[data-component="${componentKey}"]`);
-                if (zone) {
-                    // Ajouter une coche de validation
-                    addValidationCheckmark(zone, componentKey);
-                }
-            }
-        });
+    // Redirection vers la page du composant
+    if (currentKey) {
+        const comp = components[currentKey];
+        window.location.href = comp.page;
+        currentKey = null;
     }
 }
-
-function addValidationCheckmark(zone, componentKey) {
-    // Vérifier si la coche n'existe pas déjà
-    const existingCheck = document.getElementById(`check-${componentKey}`);
-    if (existingCheck) return;
-
-    // Créer un élément SVG pour la coche
-    const svgNS = "http://www.w3.org/2000/svg";
-    const checkGroup = document.createElementNS(svgNS, "g");
-    checkGroup.setAttribute("id", `check-${componentKey}`);
-    checkGroup.classList.add("validation-check");
-
-    // Cercle de fond
-    const circle = document.createElementNS(svgNS, "circle");
-    const bbox = zone.getBBox();
-    circle.setAttribute("cx", bbox.x + bbox.width - 15);
-    circle.setAttribute("cy", bbox.y + 15);
-    circle.setAttribute("r", "12");
-    circle.setAttribute("fill", "#27ae60");
-    circle.setAttribute("stroke", "white");
-    circle.setAttribute("stroke-width", "2");
-
-    // Icône de coche
-    const checkPath = document.createElementNS(svgNS, "path");
-    checkPath.setAttribute("d", `M ${bbox.x + bbox.width - 19} ${bbox.y + 15} l 3 3 l 6 -6`);
-    checkPath.setAttribute("stroke", "white");
-    checkPath.setAttribute("stroke-width", "2");
-    checkPath.setAttribute("fill", "none");
-    checkPath.setAttribute("stroke-linecap", "round");
-
-    checkGroup.appendChild(circle);
-    checkGroup.appendChild(checkPath);
-
-    // Ajouter au SVG parent
-    zone.parentNode.appendChild(checkGroup);
-
-    // Animation d'apparition
-    checkGroup.style.opacity = "0";
-    checkGroup.style.transform = "scale(0)";
-    checkGroup.style.transformOrigin = `${bbox.x + bbox.width - 15}px ${bbox.y + 15}px`;
-
-    setTimeout(() => {
-        checkGroup.style.transition = "all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)";
-        checkGroup.style.opacity = "1";
-        checkGroup.style.transform = "scale(1)";
-    }, 100);
-}
-
-// Démarrer l'application quand le DOM est chargé
-document.addEventListener('DOMContentLoaded', init);
