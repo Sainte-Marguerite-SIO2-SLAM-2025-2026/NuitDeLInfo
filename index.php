@@ -10,14 +10,13 @@
 
 <?php
 session_start();
-
 // Initialiser le tableau des jeux validés
 if(!isset($_SESSION['jeuxValides']))
 {
     $_SESSION['jeuxValides'] = [
             'licences' => false,
             'abonnement' => false,
-            'sysExp' => false,
+            'SysExp' => false,
             'stockage' => false
     ];
 }
@@ -34,7 +33,7 @@ if(isset($_GET['validated'])) {
 
     // Mapping des composants aux clés de session
     $componentMapping = [
-            'motherboard' => 'sysExp',
+            'motherboard' => 'SysExp',
             'ram' => 'licences',
             'gpu' => 'abonnement',
             'cooling' => 'stockage'
